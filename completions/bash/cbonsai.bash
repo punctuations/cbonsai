@@ -10,6 +10,8 @@ _cbonsai()
     '--live'
     '-t'
     '--time'
+    '-n'
+    '--nior'
     '-i'
     '--infinite'
     '-w'

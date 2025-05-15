@@ -21,6 +21,7 @@ struct config {
 	int infinite;
 	int screensaver;
 	int printTree;
+	int nior;
 	int verbosity;
 	int lifeStart;
 	int multiplier;
@@ -133,6 +134,7 @@ void printHelp(void) {
 	        "Options:\n"
 	        "  -l, --live             live mode: show each step of growth\n"
 	        "  -t, --time=TIME        in live mode, wait TIME secs between\n"
+			"  -n, --noir             noir mode: outputs in black and white\n"
 	        "                           steps of growth (must be larger than 0) [default: 0.03]\n"
 	        "  -i, --infinite         infinite mode: keep growing trees\n"
 	        "  -w, --wait=TIME        in infinite mode, wait TIME between each tree\n"
@@ -190,6 +192,10 @@ void drawBase(WINDOW* baseWin, int baseType) {
 
 		mvwprintw(baseWin, 1, 0, "%s", " (           ) ");
 		mvwprintw(baseWin, 2, 0, "%s", "  (_________)  ");
+		break;
+	case 3:
+		// draw roots for nothing
+		mvwprintw(baseWin, 0, 0, "%s", ".::--===++****### #****+***--:.");
 		break;
 	}
 }
@@ -254,24 +260,46 @@ void updateScreen(float timeStep) {
 }
 
 // based on type of tree, determine what color a branch should be
-void chooseColor(enum branchType type, WINDOW* treeWin) {
-	switch(type) {
-	case trunk:
-	case shootLeft:
-	case shootRight:
-		if (rand() % 2 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(11));
-		else wattron(treeWin, COLOR_PAIR(3));
-		break;
-
-	case dying:
-		if (rand() % 10 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(2));
-		else wattron(treeWin, COLOR_PAIR(2));
-		break;
-
-	case dead:
-		if (rand() % 3 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(10));
-		else wattron(treeWin, COLOR_PAIR(10));
-		break;
+void chooseColor(enum branchType type, WINDOW* treeWin, int isNior) {
+	if (isNior) {
+		// black + white
+		switch(type) {
+			case trunk:
+			case shootLeft:
+			case shootRight:
+				if (rand() % 2 == 0) wattron(treeWin, A_BOLD);
+				else wattron(treeWin, 0);
+				break;
+		
+			case dying:
+				if (rand() % 10 == 0) wattron(treeWin, A_BOLD);
+				else wattron(treeWin, 0);
+				break;
+		
+			case dead:
+				if (rand() % 3 == 0) wattron(treeWin, A_BOLD);
+				else wattron(treeWin, 0);
+				break;
+			}
+	} else {
+		switch(type) {
+			case trunk:
+			case shootLeft:
+			case shootRight:
+				if (rand() % 2 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(11));
+				else wattron(treeWin, COLOR_PAIR(3));
+				break;
+		
+			case dying:
+				if (rand() % 10 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(2));
+				else wattron(treeWin, COLOR_PAIR(2));
+				break;
+		
+			case dead:
+				if (rand() % 3 == 0) wattron(treeWin, A_BOLD | COLOR_PAIR(10));
+				else wattron(treeWin, COLOR_PAIR(10));
+				break;
+			}
 	}
 }
 
@@ -478,7 +506,7 @@ void branch(struct config *conf, struct ncursesObjects *objects, struct counters
 		x += dx;
 		y += dy;
 
-		chooseColor(type, objects->treeWin);
+		chooseColor(type, objects->treeWin, conf->nior);
 
 		// choose string to use for this branch
 		char *branchStr = chooseString(conf, type, life, dx, dy);
@@ -640,32 +668,34 @@ void init(const struct config *conf, struct ncursesObjects *objects) {
 	cbreak();	// don't wait for new line to grab user input
 	nodelay(stdscr, TRUE);	// force getch to be a non-blocking call
 
-	// if terminal has color capabilities, use them
-	if (has_colors()) {
-		start_color();
+	// if terminal has color capabilities, use them & not noir
+	if (!conf->nior) {
+		if (has_colors()) {
+			start_color();
 
-		// use native background color when possible
-		int bg = COLOR_BLACK;
-		if (use_default_colors() != ERR) bg = -1;
+			// use native background color when possible
+			int bg = COLOR_BLACK;
+			if (use_default_colors() != ERR) bg = -1;
 
-		// define color pairs
-		for(int i=0; i<16; i++){
-			init_pair(i, i, bg);
+			// define color pairs
+			for(int i=0; i<16; i++){
+				init_pair(i, i, bg);
+			}
+
+			// restrict color pallete in non-256color terminals (e.g. screen or linux)
+			if (COLORS < 256) {
+				init_pair(8, 7, bg);	// gray will look white
+				init_pair(9, 1, bg);
+				init_pair(10, 2, bg);
+				init_pair(11, 3, bg);
+				init_pair(12, 4, bg);
+				init_pair(13, 5, bg);
+				init_pair(14, 6, bg);
+				init_pair(15, 7, bg);
+			}
+		} else {
+			printf("%s", "Warning: terminal does not have color support.\n");
 		}
-
-		// restrict color pallete in non-256color terminals (e.g. screen or linux)
-		if (COLORS < 256) {
-			init_pair(8, 7, bg);	// gray will look white
-			init_pair(9, 1, bg);
-			init_pair(10, 2, bg);
-			init_pair(11, 3, bg);
-			init_pair(12, 4, bg);
-			init_pair(13, 5, bg);
-			init_pair(14, 6, bg);
-			init_pair(15, 7, bg);
-		}
-	} else {
-		printf("%s", "Warning: terminal does not have color support.\n");
 	}
 
 	// define and draw windows, then create panels
@@ -784,6 +814,7 @@ int main(int argc, char* argv[]) {
 		.infinite = 0,
 		.screensaver = 0,
 		.printTree = 0,
+		.nior = 0,
 		.verbosity = 0,
 		.lifeStart = 32,
 		.multiplier = 5,
@@ -806,6 +837,7 @@ int main(int argc, char* argv[]) {
 	struct option long_options[] = {
 		{"live", no_argument, NULL, 'l'},
 		{"time", required_argument, NULL, 't'},
+		{"nior", no_argument, NULL, 'n'},
 		{"infinite", no_argument, NULL, 'i'},
 		{"wait", required_argument, NULL, 'w'},
 		{"screensaver", no_argument, NULL, 'S'},
@@ -871,6 +903,9 @@ int main(int argc, char* argv[]) {
 			break;
 		case 'm':
 			conf.message = optarg;
+			break;
+		case 'n':
+			conf.nior = 1;
 			break;
 		case 'b':
                         /* 0 can legitimately be returned, so we cannot check wether

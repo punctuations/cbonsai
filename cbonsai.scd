@@ -20,6 +20,9 @@ cbonsai is a beautifully random bonsai tree generator.
 *-t*, *--time*=_TIME_
 	in live mode, wait TIME secs between steps of growth (must be larger than 0) [default: 0.03]
 
+*-n*, *--nior*
+	noir mode: outputs in black and white
+
 *-i*, *--infinite*
 	infinite mode: keep growing trees
 

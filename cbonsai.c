@@ -19,9 +19,9 @@ enum branchType {trunk, shootLeft, shootRight, dying, dead};
 struct config {
 	int live;
 	int infinite;
+	int nior;
 	int screensaver;
 	int printTree;
-	int nior;
 	int verbosity;
 	int lifeStart;
 	int multiplier;
@@ -134,9 +134,9 @@ void printHelp(void) {
 	        "Options:\n"
 	        "  -l, --live             live mode: show each step of growth\n"
 	        "  -t, --time=TIME        in live mode, wait TIME secs between\n"
-			"  -n, --noir             noir mode: outputs in black and white\n"
-	        "                           steps of growth (must be larger than 0) [default: 0.03]\n"
+			"                           steps of growth (must be larger than 0) [default: 0.03]\n"
 	        "  -i, --infinite         infinite mode: keep growing trees\n"
+			"  -n, --noir             noir mode: outputs in black and white\n"
 	        "  -w, --wait=TIME        in infinite mode, wait TIME between each tree\n"
 	        "                           generation [default: 4.00]\n"
 	        "  -S, --screensaver      screensaver mode; equivalent to -li and\n"
@@ -195,7 +195,7 @@ void drawBase(WINDOW* baseWin, int baseType) {
 		break;
 	case 3:
 		// draw roots for nothing
-		mvwprintw(baseWin, 0, 0, "%s", ".::--===++****### #****+***--:.");
+		mvwprintw(baseWin, 1, 0, "%s", ".::--===++****### #****+***--:.");
 		break;
 	}
 }
@@ -812,9 +812,9 @@ int main(int argc, char* argv[]) {
 	struct config conf = {
 		.live = 0,
 		.infinite = 0,
+		.nior = 0,
 		.screensaver = 0,
 		.printTree = 0,
-		.nior = 0,
 		.verbosity = 0,
 		.lifeStart = 32,
 		.multiplier = 5,
@@ -837,8 +837,8 @@ int main(int argc, char* argv[]) {
 	struct option long_options[] = {
 		{"live", no_argument, NULL, 'l'},
 		{"time", required_argument, NULL, 't'},
-		{"nior", no_argument, NULL, 'n'},
 		{"infinite", no_argument, NULL, 'i'},
+		{"nior", no_argument, NULL, 'n'},
 		{"wait", required_argument, NULL, 'w'},
 		{"screensaver", no_argument, NULL, 'S'},
 		{"message", required_argument, NULL, 'm'},
@@ -862,7 +862,7 @@ int main(int argc, char* argv[]) {
 	// parse arguments
 	int option_index = 0;
 	int c;
-	while ((c = getopt_long(argc, argv, ":lt:iw:Sm:b:c:M:L:ps:C:W:vh", long_options, &option_index)) != -1) {
+	while ((c = getopt_long(argc, argv, ":lt:n:iw:Sm:b:c:M:L:ps:C:W:vh", long_options, &option_index)) != -1) {
 		switch (c) {
 		case 'l':
 			conf.live = 1;
@@ -877,6 +877,9 @@ int main(int argc, char* argv[]) {
 				printf("error: invalid step time: '%s'\n", optarg);
 				quit(&conf, &objects, 1);
 			}
+			break;
+		case 'n':
+			conf.nior = 1;
 			break;
 		case 'i':
 			conf.infinite = 1;
@@ -903,9 +906,6 @@ int main(int argc, char* argv[]) {
 			break;
 		case 'm':
 			conf.message = optarg;
-			break;
-		case 'n':
-			conf.nior = 1;
 			break;
 		case 'b':
                         /* 0 can legitimately be returned, so we cannot check wether

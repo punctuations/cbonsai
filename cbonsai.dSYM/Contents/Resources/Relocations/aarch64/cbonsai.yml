@@ -1,0 +1,29 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/matt/git/cbonsai/cbonsai'
+relocations:
+  - { offset: 0x19, size: 0x8, addend: 0x0, symName: _delObjects, symObjAddr: 0x0, symBinAddr: 0x100000680, symSize: 0x78 }
+  - { offset: 0x675, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x2738, symBinAddr: 0x100002DB8, symSize: 0xB40 }
+  - { offset: 0x78D, size: 0x8, addend: 0x0, symName: _createDefaultCachePath, symObjAddr: 0x25B8, symBinAddr: 0x100002C38, symSize: 0x180 }
+  - { offset: 0x7F9, size: 0x8, addend: 0x0, symName: _printstdscr, symObjAddr: 0x2390, symBinAddr: 0x100002A10, symSize: 0x228 }
+  - { offset: 0x93B, size: 0x8, addend: 0x0, symName: _growTree, symObjAddr: 0x229C, symBinAddr: 0x10000291C, symSize: 0xF4 }
+  - { offset: 0x9B9, size: 0x8, addend: 0x0, symName: _init, symObjAddr: 0x20D0, symBinAddr: 0x100002750, symSize: 0x1CC }
+  - { offset: 0xA43, size: 0x8, addend: 0x0, symName: _drawMessage, symObjAddr: 0x1D3C, symBinAddr: 0x1000023BC, symSize: 0x394 }
+  - { offset: 0xB23, size: 0x8, addend: 0x0, symName: _createMessageWindows, symObjAddr: 0x1B0C, symBinAddr: 0x10000218C, symSize: 0x230 }
+  - { offset: 0xB9F, size: 0x8, addend: 0x0, symName: _addSpaces, symObjAddr: 0x1A84, symBinAddr: 0x100002104, symSize: 0x88 }
+  - { offset: 0xC1D, size: 0x8, addend: 0x0, symName: _branch, symObjAddr: 0x14FC, symBinAddr: 0x100001B7C, symSize: 0x588 }
+  - { offset: 0xD66, size: 0x8, addend: 0x0, symName: _chooseString, symObjAddr: 0x1160, symBinAddr: 0x1000017E0, symSize: 0x39C }
+  - { offset: 0xDF2, size: 0x8, addend: 0x0, symName: _setDeltas, symObjAddr: 0xA84, symBinAddr: 0x100001104, symSize: 0x6DC }
+  - { offset: 0xE9E, size: 0x8, addend: 0x0, symName: _chooseColor, symObjAddr: 0x80C, symBinAddr: 0x100000E8C, symSize: 0x278 }
+  - { offset: 0xEE9, size: 0x8, addend: 0x0, symName: _updateScreen, symObjAddr: 0x7AC, symBinAddr: 0x100000E2C, symSize: 0x60 }
+  - { offset: 0xF2E, size: 0x8, addend: 0x0, symName: _checkKeyPress, symObjAddr: 0x73C, symBinAddr: 0x100000DBC, symSize: 0x70 }
+  - { offset: 0xF67, size: 0x8, addend: 0x0, symName: _roll, symObjAddr: 0x700, symBinAddr: 0x100000D80, symSize: 0x3C }
+  - { offset: 0xFA0, size: 0x8, addend: 0x0, symName: _drawWins, symObjAddr: 0x5A0, symBinAddr: 0x100000C20, symSize: 0x160 }
+  - { offset: 0x1033, size: 0x8, addend: 0x0, symName: _drawBase, symObjAddr: 0x298, symBinAddr: 0x100000918, symSize: 0x308 }
+  - { offset: 0x106C, size: 0x8, addend: 0x0, symName: _printHelp, symObjAddr: 0x278, symBinAddr: 0x1000008F8, symSize: 0x20 }
+  - { offset: 0x1086, size: 0x8, addend: 0x0, symName: _finish, symObjAddr: 0x204, symBinAddr: 0x100000884, symSize: 0x74 }
+  - { offset: 0x10C3, size: 0x8, addend: 0x0, symName: _loadFromFile, symObjAddr: 0x140, symBinAddr: 0x1000007C0, symSize: 0xC4 }
+  - { offset: 0x111E, size: 0x8, addend: 0x0, symName: _saveToFile, symObjAddr: 0xB4, symBinAddr: 0x100000734, symSize: 0x8C }
+  - { offset: 0x1175, size: 0x8, addend: 0x0, symName: _quit, symObjAddr: 0x78, symBinAddr: 0x1000006F8, symSize: 0x3C }
+  - { offset: 0x11BD, size: 0x8, addend: 0x0, symName: _delObjects, symObjAddr: 0x0, symBinAddr: 0x100000680, symSize: 0x78 }
+...

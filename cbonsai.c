@@ -725,7 +725,7 @@ void growTree(struct config *conf, struct ncursesObjects *objects, struct counte
 }
 
 // print stdscr to terminal window
-void printstdscr(void) {
+void printstdscr(int isNoir) {
 	int maxY, maxX;
 	getmaxyx(stdscr, maxY, maxX);
 
@@ -750,10 +750,12 @@ void printstdscr(void) {
 			if(attrs & A_BOLD) printf("\033[1m");
 			else printf("\033[0m");
 
-			// enable correct color
-			if (fg == 0) printf("\033[0m");
-			else if (fg <= 7) printf("\033[3%him", fg);
-			else if (fg >= 8) printf("\033[9%him", fg - 8);
+			// enable correct color (only if not in noir mode)
+			if (!isNoir) {
+				if (fg == 0) printf("\033[0m");
+				else if (fg <= 7) printf("\033[3%him", fg);
+				else if (fg >= 8) printf("\033[9%him", fg - 8);
+			}
 
 			printf("%ls", wch);
 
@@ -1061,7 +1063,7 @@ int main(int argc, char* argv[]) {
 		overwrite(objects.messageBorderWin, stdscr);
 		overwrite(objects.messageWin, stdscr);
 
-		printstdscr();
+		printstdscr(conf.nior);
 	} else {
 		wgetch(objects.treeWin);
 		finish(&conf, &myCounters);
